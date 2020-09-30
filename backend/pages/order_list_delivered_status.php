@@ -1,0 +1,26 @@
+<?php 
+	session_start();
+	include 'dbconnection/dbconnect.php';
+
+	$id = $_SESSION['user']['User_id'];
+
+	$orderid = $_GET['orderid'];
+
+	$status =1;
+	$paymentstatus =1;
+
+	$sql = "UPDATE orders SET Shipment_status=:shipmentstatus, Payment_status=:paymentstatus, Status_changed_by=:statuschangedby WHERE Order_id=:orderid";
+	$stmt = $pdo->prepare($sql);
+	$stmt->bindParam(":orderid", $orderid);
+	$stmt->bindParam(":shipmentstatus", $status);
+	$stmt->bindParam(":paymentstatus", $paymentstatus);
+	$stmt->bindParam(":statuschangedby", $id);
+	$stmt->execute();
+
+	if($stmt->rowCount()) {
+		header("location:order_list.php");
+	} else {
+		echo "Error";
+	}
+
+?>
